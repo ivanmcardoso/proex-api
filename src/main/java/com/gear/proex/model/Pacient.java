@@ -24,7 +24,7 @@ public class Pacient implements Serializable {
     @Getter @Setter
     private Long age;
 
-    @Column(name = "cpf", nullable = false)
+    @Column(name = "cpf", nullable = false,unique=true)
     @Getter @Setter
     private String cpf;
 
