@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/footExam")
+@RequestMapping("/api/footExam")
 @CrossOrigin("*")
 public class FootExamController {
 
