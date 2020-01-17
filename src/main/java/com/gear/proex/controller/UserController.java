@@ -2,6 +2,7 @@ package com.gear.proex.controller;
 
 import com.gear.proex.DTO.UserRegisterDTO;
 import com.gear.proex.enums.ProfileEnum;
+import com.gear.proex.model.Permission;
 import com.gear.proex.model.User;
 import com.gear.proex.service.UserService;
 import com.gear.proex.utils.PasswordUtils;
@@ -50,7 +51,10 @@ public class UserController {
         user.setEmail(userRegisterDTO.getEmail());
         user.setPassword(PasswordUtils.gerarBCrypt(userRegisterDTO.getPassword()));
         user.setUserName(userRegisterDTO.getUserName());
-        user.setProfile(userRegisterDTO.isAdmin() ? ProfileEnum.ROLE_ADMIN: ProfileEnum.ROLE_USER);
+        user.setAccountNonExpired(true);
+        user.setAccountNonLocked(true);
+        user.setCredentialsNonExpired(true);
+        user.setEnabled(true);
         return user;
     }
 }
