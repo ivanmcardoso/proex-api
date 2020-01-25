@@ -31,7 +31,7 @@ public class Permission implements GrantedAuthority, Serializable {
         return description;
     }
 
-    @ManyToMany(mappedBy = "permissions")
+    @ManyToMany (mappedBy = "permissions")
     @JsonIgnore
     private List<User> users;
 }
