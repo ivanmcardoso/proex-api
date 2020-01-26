@@ -42,7 +42,7 @@ public class PacientController {
     }
 
     @GetMapping
-    public List<Pacient> getAll(){
+    public List<PacientDTO> getAll(){
         return pacientService.getAll();
     }
 

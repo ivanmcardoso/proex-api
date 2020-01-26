@@ -1,13 +1,18 @@
 package com.gear.proex.service.impl;
 
+import com.gear.proex.DTO.PacientDTO;
+import com.gear.proex.mapper.PacientMapper;
 import com.gear.proex.model.Pacient;
 import com.gear.proex.repository.PacientRepository;
 import com.gear.proex.service.PacientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import springfox.documentation.swagger2.mappers.ModelMapper;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PacientServiceImpl implements PacientService {
@@ -16,8 +21,11 @@ public class PacientServiceImpl implements PacientService {
     private PacientRepository pacientRepository;
 
     @Override
-    public List<Pacient> getAll() {
-        return pacientRepository.findAll();
+    public List<PacientDTO> getAll() {
+        List<Pacient> pacients = pacientRepository.findAll();
+        return pacients.stream().map(pacient -> new PacientMapper().convertToDTO(pacient))
+                .collect(Collectors.toList());
+
     }
 
 
