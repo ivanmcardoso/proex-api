@@ -20,6 +20,11 @@ public class PacientController {
     @Autowired
     PacientService pacientService;
 
+    @DeleteMapping
+    public void deleteById(@RequestBody Long id){
+        pacientService.delete(id);
+    }
+
     @PostMapping
     public ResponseEntity<PacientDTO>  register(@Valid @RequestBody PacientDTO pacientDTO){
 
