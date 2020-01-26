@@ -1,5 +1,6 @@
 package com.gear.proex.controller;
 
+import com.gear.proex.DTO.UserDTO;
 import com.gear.proex.DTO.UserRegisterDTO;
 import com.gear.proex.enums.ProfileEnum;
 import com.gear.proex.model.Permission;
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAll(){
+    public List<UserDTO> getAll(){
         return userService.getAll();
     }
 

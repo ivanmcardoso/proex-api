@@ -1,5 +1,7 @@
 package com.gear.proex.service.impl;
 
+import com.gear.proex.DTO.UserDTO;
+import com.gear.proex.mapper.UserMapper;
 import com.gear.proex.model.User;
 import com.gear.proex.repository.UserRepository;
 import com.gear.proex.service.UserService;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -19,8 +22,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<UserDTO> getAll() {
+        List<User> userList =  userRepository.findAll();
+        return userList.stream().map(user -> new UserMapper().convertToDTO(user))
+                .collect(Collectors.toList());
     }
 
     @Override
