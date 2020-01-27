@@ -11,13 +11,19 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/pacients")
+@CrossOrigin(origins = "*")
 public class PacientController {
 
     @Autowired
     PacientService pacientService;
+
+    @DeleteMapping()
+    public void deleteById( Long id){
+        pacientService.delete(id);
+    }
 
     @PostMapping
     public ResponseEntity<PacientDTO>  register(@Valid @RequestBody PacientDTO pacientDTO){
@@ -41,7 +47,7 @@ public class PacientController {
     }
 
     @GetMapping
-    public List<Pacient> getAll(){
+    public List<PacientDTO> getAll(){
         return pacientService.getAll();
     }
 

@@ -1,5 +1,6 @@
 package com.gear.proex.service;
 
+import com.gear.proex.DTO.PacientDTO;
 import com.gear.proex.model.Pacient;
 
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.Optional;
 
 public interface PacientService {
 
-    List<Pacient> getAll();
+    List<PacientDTO> getAll();
 
     Optional<Pacient> findByCpf(String cpf);
 
