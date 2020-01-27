@@ -41,6 +41,11 @@ public class UserController {
         return userService.getAll();
     }
 
+    @DeleteMapping
+    public void deleteById(Long id){
+        userService.delete(id);
+    }
+
     @GetMapping("/findByUserName")
     public Optional<User> findByUserName(String userName){
         return userService.findByUserName(userName);
