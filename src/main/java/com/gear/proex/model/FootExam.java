@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Getter @Setter
@@ -20,6 +21,23 @@ public class FootExam {
     @JsonIgnore
     private Pacient pacient;
 
+    @Column(name = "DataChange_CreatedTime", nullable = false)
+    private Date dataChangeCreatedTime;
+
+    @Column(name = "DataChange_LastTime")
+    private Date dataChangeLastModifiedTime;
+
     @OneToMany(mappedBy = "footExam", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Sensor> sensors;
+
+    @PrePersist
+    protected void prePersist() {
+        if (this.dataChangeCreatedTime == null) dataChangeCreatedTime = new Date();
+        if (this.dataChangeLastModifiedTime == null) dataChangeLastModifiedTime = new Date();
+    }
+
+    @PreUpdate
+    protected void preUpdate() {
+        this.dataChangeLastModifiedTime = new Date();
+    }
 }
