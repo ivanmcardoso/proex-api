@@ -37,6 +37,11 @@ public class FootExamController {
         return ResponseEntity.ok(footExam);
     }
 
+    @GetMapping("/{id}")
+    public List<FootExam> findByPacientId(@PathVariable Long id){
+        return footExamService.findByPacientId(id);
+    }
+
     @GetMapping
     public List<FootExam> getAll(){
         return footExamService.getAll();

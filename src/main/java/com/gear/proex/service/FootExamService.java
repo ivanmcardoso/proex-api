@@ -11,7 +11,7 @@ public interface FootExamService {
 
     FootExam save(FootExam footExam);
 
-
+    List<FootExam> findByPacientId(Long id);
 
     void delete(Long id);
 }

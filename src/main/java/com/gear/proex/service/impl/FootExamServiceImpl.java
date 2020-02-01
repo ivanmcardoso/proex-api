@@ -25,6 +25,11 @@ public class FootExamServiceImpl implements FootExamService {
     }
 
     @Override
+    public List<FootExam> findByPacientId(Long id) {
+        return footExamRepository.findByPacientId(id);
+    }
+
+    @Override
     public void delete(Long id) {
         footExamRepository.deleteById(id);
     }
