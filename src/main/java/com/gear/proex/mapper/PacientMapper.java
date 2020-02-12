@@ -6,9 +6,15 @@ import org.modelmapper.ModelMapper;
 
 import java.util.List;
 
-public class PacientMapper {
+public class PacientMapper implements GenericMapper<Pacient,PacientDTO> {
 
+    @Override
     public  PacientDTO convertToDTO(Pacient pacient) {
-       return new ModelMapper().map(pacient, PacientDTO.class);
+        return new ModelMapper().map(pacient, PacientDTO.class);
+    }
+
+    @Override
+    public Pacient convertToEntity(PacientDTO dto) {
+        return null;
     }
 }

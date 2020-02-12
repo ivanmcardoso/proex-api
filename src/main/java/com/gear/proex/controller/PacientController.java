@@ -1,6 +1,7 @@
 package com.gear.proex.controller;
 
 import com.gear.proex.DTO.PacientDTO;
+import com.gear.proex.mapper.PacientMapper;
 import com.gear.proex.model.Pacient;
 import com.gear.proex.service.PacientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ public class PacientController {
     @Autowired
     PacientService pacientService;
 
+    private final PacientMapper pacientMapper = new PacientMapper();
     @DeleteMapping()
     public void deleteById( Long id){
         pacientService.delete(id);
@@ -48,7 +50,7 @@ public class PacientController {
 
     @GetMapping
     public List<PacientDTO> getAll(){
-        return pacientService.getAll();
+        return pacientMapper.convertToListDTO(pacientService.getAll());
     }
 
     @GetMapping("/{id}")
