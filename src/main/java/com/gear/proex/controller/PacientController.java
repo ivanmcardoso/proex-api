@@ -4,6 +4,7 @@ import com.gear.proex.DTO.PacientDTO;
 import com.gear.proex.mapper.PacientMapper;
 import com.gear.proex.model.Pacient;
 import com.gear.proex.service.PacientService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,43 +23,51 @@ public class PacientController {
     PacientService pacientService;
 
     private final PacientMapper pacientMapper = new PacientMapper();
-    @DeleteMapping()
-    public void deleteById( Long id){
-        pacientService.delete(id);
+
+    @DeleteMapping
+    @ApiOperation("delete patient by id")
+    public void deleteById(Long id){
+        pacientService.removeById(id);
     }
 
     @PostMapping
+    @ApiOperation("register new patient")
     public ResponseEntity<PacientDTO>  register(@Valid @RequestBody PacientDTO pacientDTO){
-
         try{
-            Pacient pacient = convertTo(pacientDTO);
-            pacientService.save(pacient);
+            Pacient pacient = pacientMapper.convertToEntity(pacientDTO);
+            pacientService.add(pacient);
         } catch (Exception ex){
             return ResponseEntity.badRequest().body(pacientDTO);
         }
-
         return ResponseEntity.ok(pacientDTO);
     }
 
-    private Pacient convertTo(PacientDTO pacientDTO) {
-        Pacient pacient = new Pacient();
-        pacient.setName(pacientDTO.getName());
-        pacient.setAge(pacientDTO.getAge());
-        pacient.setCpf(pacientDTO.getCpf());
-        return pacient;
+    @PutMapping
+    @ApiOperation("update a patient")
+    ResponseEntity<PacientDTO> update(@Valid @RequestBody PacientDTO pacientDTO){
+        try{
+            Pacient pacient = pacientMapper.convertToEntity(pacientDTO);
+            pacientService.update(pacient);
+        } catch (Exception ex){
+            return ResponseEntity.badRequest().body(pacientDTO);
+        }
+        return ResponseEntity.ok(pacientDTO);
     }
 
     @GetMapping
+    @ApiOperation("list all patient")
     public List<PacientDTO> getAll(){
         return pacientMapper.convertToListDTO(pacientService.getAll());
     }
 
     @GetMapping("/{id}")
-    public Optional<Pacient> findByID(Long id){
-        return pacientService.findById(id);
+    @ApiOperation("get patient by id")
+    public Pacient findByID(Long id){
+        return pacientService.get(id);
     }
 
     @GetMapping("/findByCpf")
+    @ApiOperation("get patient by CPF")
     public Optional<Pacient> findByCpf(String cpf){
         return pacientService.findByCpf(cpf);
     }

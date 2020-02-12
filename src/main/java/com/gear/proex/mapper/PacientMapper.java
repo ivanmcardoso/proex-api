@@ -15,6 +15,11 @@ public class PacientMapper implements GenericMapper<Pacient,PacientDTO> {
 
     @Override
     public Pacient convertToEntity(PacientDTO dto) {
-        return null;
+        Pacient pacient = new Pacient();
+        if(dto.getId() != null) pacient.setId(dto.getId());
+        pacient.setName(dto.getName());
+        pacient.setAge(dto.getAge());
+        pacient.setCpf(dto.getCpf());
+        return pacient;
     }
 }

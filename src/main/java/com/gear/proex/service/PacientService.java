@@ -8,12 +8,5 @@ import java.util.Optional;
 
 public interface PacientService extends GenericService<Pacient, Long> {
 
-
     Optional<Pacient> findByCpf(String cpf);
-
-    Optional<Pacient> findById(Long id);
-
-    Pacient save(Pacient pacient);
-
-    void delete(Long id);
 }

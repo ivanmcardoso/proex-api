@@ -25,18 +25,4 @@ public class PacientServiceImpl extends GenericServiceImpl<Pacient, Long> implem
         return Optional.ofNullable(pacientRepository.findByCpf(cpf));
     }
 
-    @Override
-    public Optional<Pacient> findById(Long id) {
-        return pacientRepository.findById(id);
-    }
-
-    @Override
-    public Pacient save(Pacient pacient) {
-        return pacientRepository.save(pacient);
-    }
-
-    @Override
-    public void delete(Long id) {
-        pacientRepository.deleteById(id);
-    }
 }
