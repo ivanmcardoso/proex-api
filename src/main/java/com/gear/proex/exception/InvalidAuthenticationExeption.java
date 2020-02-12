@@ -1,4 +1,4 @@
-package com.gear.proex.exeption;
+package com.gear.proex.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;

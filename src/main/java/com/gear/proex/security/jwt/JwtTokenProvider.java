@@ -1,6 +1,6 @@
 package com.gear.proex.security.jwt;
 
-import com.gear.proex.exeption.InvalidAuthenticationExeption;
+import com.gear.proex.exception.InvalidAuthenticationExeption;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

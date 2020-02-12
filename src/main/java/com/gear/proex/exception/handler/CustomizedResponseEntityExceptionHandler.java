@@ -1,6 +1,6 @@
-package com.gear.proex.exeption.handler;
+package com.gear.proex.exception.handler;
 
-import com.gear.proex.exeption.ExceptionResponse;
+import com.gear.proex.exception.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

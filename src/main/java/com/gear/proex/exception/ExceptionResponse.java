@@ -1,4 +1,4 @@
-package com.gear.proex.exeption;
+package com.gear.proex.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
