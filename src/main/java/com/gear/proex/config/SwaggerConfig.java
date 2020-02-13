@@ -42,6 +42,8 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.gear.proex.controller"))
                 .paths(PathSelectors.any()).build()
+                .securitySchemes(Collections.singletonList(securitySchema()))
+                .securityContexts(Collections.singletonList(securityContext()))
                 .apiInfo(apiInfo());
     }
 
@@ -51,4 +53,47 @@ public class SwaggerConfig {
                 .build();
     }
 
+
+    private SecurityContext securityContext() {
+        return SecurityContext.builder().securityReferences(defaultAuth()).forPaths(PathSelectors.ant("/**"))
+                .build();
+    }
+
+    private List<SecurityReference> defaultAuth() {
+
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[3];
+        authorizationScopes[0] = new AuthorizationScope("read", "read all");
+        authorizationScopes[1] = new AuthorizationScope("trust", "trust all");
+        authorizationScopes[2] = new AuthorizationScope("write", "write all");
+
+        return Collections.singletonList(new SecurityReference("oauth2schema", authorizationScopes));
+
+    }
+
+
+    private OAuth securitySchema() {
+
+        List<AuthorizationScope> authorizationScopeList = new ArrayList();
+        authorizationScopeList.add(new AuthorizationScope("read", "read all"));
+        authorizationScopeList.add(new AuthorizationScope("trust", "trust all"));
+        authorizationScopeList.add(new AuthorizationScope("write", "access all"));
+
+        List<GrantType> grantTypes = new ArrayList();
+
+        String tokenUrl = "http://localhost:8080/oauth/token";
+        grantTypes.add(new ResourceOwnerPasswordCredentialsGrant(tokenUrl));
+
+        return new OAuth("oauth2schema", authorizationScopeList, grantTypes);
+
+    }
+
+    @Bean
+    public SecurityConfiguration securityInfo() {
+        SecurityConfigurationBuilder builder = SecurityConfigurationBuilder.builder();
+        builder.clientId("proex");
+        builder.clientSecret("123");
+        builder.scopeSeparator(" ");
+
+        return builder.build();
+    }
 }
