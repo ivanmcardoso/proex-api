@@ -1,14 +1,13 @@
 package com.gear.proex.config;
 
-import com.gear.proex.model.User;
-import com.gear.proex.security.jwt.JwtTokenProvider;
 import com.gear.proex.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import springfox.documentation.RequestHandler;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -23,14 +22,20 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Configuration
 @EnableSwagger2
-public class SwaggerConfig {
+public class SwaggerConfig extends WebMvcConfigurationSupport {
 
-    @Autowired
-    JwtTokenProvider tokenProvider;
+
+    @Value("${security.oauth2.client-id}")
+    private String clientId;
+
+    @Value("${security.oauth2.resource.token-url}")
+    private String tokenUrl;
+
+    @Value("${security.oauth2.client.client-secret}")
+    private String clientSecret;
 
     @Autowired
     UserService userService;
@@ -58,7 +63,14 @@ public class SwaggerConfig {
         return SecurityContext.builder().securityReferences(defaultAuth()).forPaths(PathSelectors.ant("/**"))
                 .build();
     }
+    @Override
+    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
 
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
     private List<SecurityReference> defaultAuth() {
 
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[3];
@@ -80,7 +92,6 @@ public class SwaggerConfig {
 
         List<GrantType> grantTypes = new ArrayList();
 
-        String tokenUrl = "http://localhost:8080/oauth/token";
         grantTypes.add(new ResourceOwnerPasswordCredentialsGrant(tokenUrl));
 
         return new OAuth("oauth2schema", authorizationScopeList, grantTypes);
@@ -90,8 +101,8 @@ public class SwaggerConfig {
     @Bean
     public SecurityConfiguration securityInfo() {
         SecurityConfigurationBuilder builder = SecurityConfigurationBuilder.builder();
-        builder.clientId("proex");
-        builder.clientSecret("123");
+        builder.clientId(clientId);
+        builder.clientSecret(clientSecret);
         builder.scopeSeparator(" ");
 
         return builder.build();
