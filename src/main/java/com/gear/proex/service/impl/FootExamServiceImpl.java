@@ -9,28 +9,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class FootExamServiceImpl implements FootExamService {
+public class FootExamServiceImpl extends GenericServiceImpl<FootExam, Long> implements FootExamService {
 
     @Autowired
     private FootExamRepository footExamRepository;
 
     @Override
-    public List<FootExam> getAll() {
-        return footExamRepository.findAll();
-    }
-
-    @Override
-    public FootExam save(FootExam footExam) {
-        return footExamRepository.save(footExam);
-    }
-
-    @Override
-    public List<FootExam> findByPacientId(Long id) {
+    public List<FootExam> findByPatientId(Long id) {
         return footExamRepository.findByPacientId(id);
     }
 
-    @Override
-    public void delete(Long id) {
-        footExamRepository.deleteById(id);
-    }
 }

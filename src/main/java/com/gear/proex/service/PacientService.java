@@ -6,15 +6,7 @@ import com.gear.proex.model.Pacient;
 import java.util.List;
 import java.util.Optional;
 
-public interface PacientService {
-
-    List<PacientDTO> getAll();
+public interface PacientService extends GenericService<Pacient, Long> {
 
     Optional<Pacient> findByCpf(String cpf);
-
-    Optional<Pacient> findById(Long id);
-
-    Pacient save(Pacient pacient);
-
-    void delete(Long id);
 }

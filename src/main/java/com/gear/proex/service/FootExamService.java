@@ -5,13 +5,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface FootExamService {
+public interface FootExamService extends GenericService<FootExam, Long> {
 
-    List<FootExam> getAll();
+    List<FootExam> findByPatientId(Long id);
 
-    FootExam save(FootExam footExam);
-
-    List<FootExam> findByPacientId(Long id);
-
-    void delete(Long id);
 }

@@ -4,12 +4,12 @@ import com.gear.proex.model.FootExam;
 import com.gear.proex.model.Pacient;
 import com.gear.proex.service.FootExamService;
 import com.gear.proex.service.PacientService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/footExam")
@@ -23,13 +23,14 @@ public class FootExamController {
     PacientService pacientService;
 
     @PostMapping
-    public ResponseEntity<FootExam> register( Long userId){
+    @ApiOperation("register new foot exam")
+    public ResponseEntity<FootExam> register(@RequestBody Long userId){
         FootExam footExam = new FootExam();
 
         try{
-            Optional<Pacient> pacient = pacientService.findById(userId);
-            footExam.setPacient(pacient.get());
-            footExamService.save(footExam);
+            Pacient pacient = pacientService.get(userId);
+            footExam.setPacient(pacient);
+            footExamService.add(footExam);
         } catch (Exception ex){
             return ResponseEntity.badRequest().body(footExam);
         }
@@ -37,13 +38,15 @@ public class FootExamController {
         return ResponseEntity.ok(footExam);
     }
 
-    @GetMapping("/{id}")
-    public List<FootExam> findByPacientId(@PathVariable Long id){
-        return footExamService.findByPacientId(id);
+    @DeleteMapping
+    @ApiOperation("delete foot exam by id")
+    public void delete(Long id){
+        footExamService.removeById(id);
     }
 
-    @GetMapping
-    public List<FootExam> getAll(){
-        return footExamService.getAll();
+    @GetMapping("/{id}")
+    @ApiOperation("get foot exam by id")
+    public List<FootExam> findByPatientId(@PathVariable Long id){
+        return footExamService.findByPatientId(id);
     }
 }

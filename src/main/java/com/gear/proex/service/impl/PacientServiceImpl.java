@@ -15,38 +15,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class PacientServiceImpl implements PacientService {
+public class PacientServiceImpl extends GenericServiceImpl<Pacient, Long> implements PacientService {
 
     @Autowired
     private PacientRepository pacientRepository;
-
-    @Override
-    public List<PacientDTO> getAll() {
-        List<Pacient> pacients = pacientRepository.findAll();
-        return pacients.stream().map(pacient -> new PacientMapper().convertToDTO(pacient))
-                .collect(Collectors.toList());
-
-    }
-
-
 
     @Override
     public Optional<Pacient> findByCpf(String cpf) {
         return Optional.ofNullable(pacientRepository.findByCpf(cpf));
     }
 
-    @Override
-    public Optional<Pacient> findById(Long id) {
-        return pacientRepository.findById(id);
-    }
-
-    @Override
-    public Pacient save(Pacient pacient) {
-        return pacientRepository.save(pacient);
-    }
-
-    @Override
-    public void delete(Long id) {
-        pacientRepository.deleteById(id);
-    }
 }
