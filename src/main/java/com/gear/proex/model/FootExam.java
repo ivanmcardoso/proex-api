@@ -27,7 +27,7 @@ public class FootExam {
     @Column(name = "DataChange_LastTime")
     private Date dataChangeLastModifiedTime;
 
-    @OneToMany(mappedBy = "footExam", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "footExam", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Sensor> sensors;
 
     @PrePersist
