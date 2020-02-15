@@ -3,6 +3,7 @@ package com.gear.proex.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -26,6 +27,8 @@ public class ResourceServer extends ResourceServerConfigurerAdapter {
     @Value("${security.oauth2.resource.resource-id}")
     private String resourceId;
 
+    private static final String SECURED_READ_SCOPE = "#oauth2.hasScope('read')";
+    private static final String SECURED_WRITE_SCOPE = "#oauth2.hasScope('write')";
     private static final String SECURED_PATTERN = "/**";
 
     private static final String[] SWAGGER_UI = {
@@ -41,7 +44,9 @@ public class ResourceServer extends ResourceServerConfigurerAdapter {
             "/tokens/**",
             "/users/**"
     };
-
+    private static final String[] MONITORING_SERVICES = {
+            "/actuator/**"
+    };
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         resources.stateless(true);
@@ -54,8 +59,9 @@ public class ResourceServer extends ResourceServerConfigurerAdapter {
         http.cors().and().requestMatchers()
                 .antMatchers(SECURED_PATTERN).and().authorizeRequests()
                 .antMatchers(SWAGGER_UI).permitAll()
-                .anyRequest().denyAll()
-                .and()
+                .antMatchers(MONITORING_SERVICES).permitAll()
+                .antMatchers(HttpMethod.POST, SECURED_PATTERN).access(SECURED_WRITE_SCOPE)
+                .anyRequest().access(SECURED_READ_SCOPE).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 
@@ -64,8 +70,5 @@ public class ResourceServer extends ResourceServerConfigurerAdapter {
         filter.setForceEncoding(true);
         http.addFilterBefore(filter, CsrfFilter.class);
     }
-    @Bean
-    public MethodSecurityExpressionHandler createExpressionHandler() {
-        return new OAuth2MethodSecurityExpressionHandler();
-    }
+
 }

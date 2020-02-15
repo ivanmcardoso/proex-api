@@ -34,7 +34,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
     @Value("${security.oauth2.resource.token-url}")
     private String tokenUrl;
 
-    @Value("${security.oauth2.client.client-secret}")
+    @Value("${proex.security.security.oauth2.client.client-secret}")
     private String clientSecret;
 
     @Autowired

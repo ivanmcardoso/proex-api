@@ -5,15 +5,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;
+import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -30,9 +37,6 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
 
     @Value("${security.oauth2.client.client-secret}")
     private String clientSecret;
-
-    @Value("${security.oauth2.resource.check-token-url}")
-    private String checkTokenUrl;
 
     @Value("${security.oauth2.resource.resource-id}")
     private String resourceId;
@@ -57,7 +61,8 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
         clients.inMemory()
                 .withClient(clientId)
                 .secret(clientSecret)
-                .authorizedGrantTypes(proexProperty.getSecurity().getGrantTypePassword(),proexProperty.getSecurity().getGrantTypeRefreshToken())
+                .scopes(proexProperty.getSecurity().getScopeRead())
+                .authorizedGrantTypes(proexProperty.getSecurity().getGrantTypePassword())
                 .accessTokenValiditySeconds(18000)
                 .refreshTokenValiditySeconds(3600 * 24);
     }
@@ -66,13 +71,11 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
         endpoints
                 .tokenStore(tokenStore())
-                .tokenEnhancer(tokenEnhancerChain)
                 .accessTokenConverter(accessTokenConverter())
-                .reuseRefreshTokens(false)
                 .userDetailsService(userDetailsService)
+                .exceptionTranslator(loggingExceptionTranslator())
                 .authenticationManager(authenticationManager);
     }
 
@@ -97,11 +100,26 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
     }
 
     @Bean
-    public TokenEnhancer tokenEnhancer() {
-        return new TokenEnhancer() {
+    @Primary
+    public DefaultTokenServices tokenServices() {
+        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        defaultTokenServices.setTokenStore(tokenStore());
+        return defaultTokenServices;
+    }
+    @Bean
+    public WebResponseExceptionTranslator loggingExceptionTranslator() {
+        return new DefaultWebResponseExceptionTranslator() {
             @Override
-            public OAuth2AccessToken enhance(OAuth2AccessToken oAuth2AccessToken, OAuth2Authentication oAuth2Authentication) {
-                return oAuth2AccessToken;
+            public ResponseEntity<OAuth2Exception> translate(Exception e) throws Exception {
+                // This is the line that prints the stack trace to the log. You can customise this to format the trace etc if you like
+                e.printStackTrace();
+
+                // Carry on handling the exception
+                ResponseEntity<OAuth2Exception> responseEntity = super.translate(e);
+                HttpHeaders headers = new HttpHeaders();
+                headers.setAll(responseEntity.getHeaders().toSingleValueMap());
+                OAuth2Exception excBody = responseEntity.getBody();
+                return new ResponseEntity<>(excBody, headers, responseEntity.getStatusCode());
             }
         };
     }
