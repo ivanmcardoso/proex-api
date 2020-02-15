@@ -62,7 +62,7 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
                 .withClient(clientId)
                 .secret(clientSecret)
                 .scopes(proexProperty.getSecurity().getScopeRead())
-                .authorizedGrantTypes(proexProperty.getSecurity().getGrantTypePassword())
+                .authorizedGrantTypes(proexProperty.getSecurity().getGrantTypePassword(),proexProperty.getSecurity().getGrantTypeRefreshToken())
                 .accessTokenValiditySeconds(18000)
                 .refreshTokenValiditySeconds(3600 * 24);
     }

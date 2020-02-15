@@ -40,9 +40,7 @@ public class ResourceServer extends ResourceServerConfigurerAdapter {
             "/swagger-ui.html",
             "/webjars/**",
             "/oauth/**",
-            "/oauth/token",
             "/tokens/**",
-            "/users/**"
     };
     private static final String[] MONITORING_SERVICES = {
             "/actuator/**"
