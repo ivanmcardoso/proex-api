@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/footExam")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 public class FootExamController {
 
     @Autowired
