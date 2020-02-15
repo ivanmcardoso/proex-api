@@ -1,7 +1,5 @@
 package com.gear.proex.config;
 
-import com.gear.proex.security.jwt.JwtTokenProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,13 +21,10 @@ import org.springframework.web.filter.CorsFilter;
 @EnableAuthorizationServer
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private JwtTokenProvider tokenProvider;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return bCryptPasswordEncoder;
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
