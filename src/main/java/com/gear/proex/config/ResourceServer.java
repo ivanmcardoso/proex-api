@@ -55,7 +55,7 @@ public class ResourceServer extends ResourceServerConfigurerAdapter {
                 .antMatchers(SECURED_PATTERN).and().authorizeRequests()
                 .antMatchers(SWAGGER_UI).permitAll()
                 .antMatchers(MONITORING_SERVICES).permitAll()
-                .antMatchers(HttpMethod.POST, SECURED_PATTERN).access(SECURED_WRITE_SCOPE)
+                .antMatchers(HttpMethod.POST, SECURED_PATTERN).authenticated()
                 .anyRequest().access(SECURED_READ_SCOPE).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
