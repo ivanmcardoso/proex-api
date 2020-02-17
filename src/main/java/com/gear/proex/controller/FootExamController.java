@@ -24,11 +24,11 @@ public class FootExamController {
 
     @PostMapping
     @ApiOperation("register new foot exam")
-    public ResponseEntity<FootExam> register(@RequestBody Long userId){
+    public ResponseEntity<FootExam> register(Long pacientId){
         FootExam footExam = new FootExam();
 
         try{
-            Pacient pacient = pacientService.get(userId);
+            Pacient pacient = pacientService.get(pacientId);
             footExam.setPacient(pacient);
             footExamService.add(footExam);
         } catch (Exception ex){
